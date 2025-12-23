@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Excluir Vendedor</h2>
+  <p>Tem certeza que deseja excluir o vendedor "{{ seller.name }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a href="{% url 'seller-list' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

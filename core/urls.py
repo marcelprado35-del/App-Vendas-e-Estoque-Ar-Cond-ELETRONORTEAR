@@ -1,7 +1,41 @@
 from django.urls import path
 
-from .views import home
+from .views import (
+    index,
+    customer_list,
+    seller_list,
+    sale_list,
+    sale_create,
+    sale_update,
+    SaleDeleteView,
+    product_list,
+    ProductCreateView,
+    ProductUpdateView,
+    ProductDeleteView,
+    CustomerCreateView,
+    CustomerUpdateView,
+    CustomerDeleteView,
+    SellerCreateView,
+    SellerUpdateView,
+    SellerDeleteView,
+)
 
 urlpatterns = [
-    path("", home, name="home"),
+    path("", index, name="index"),
+    path("customers/", customer_list, name="customer_list"),
+    path("customers/create/", CustomerCreateView.as_view(), name="customer_create"),
+    path("customers/<int:pk>/update/", CustomerUpdateView.as_view(), name="customer_update"),
+    path("customers/<int:pk>/delete/", CustomerDeleteView.as_view(), name="customer_delete"),
+    path("sellers/", seller_list, name="seller-list"),
+    path("sellers/create/", SellerCreateView.as_view(), name="seller_create"),
+    path("sellers/<int:pk>/update/", SellerUpdateView.as_view(), name="seller_update"),
+    path("sellers/<int:pk>/delete/", SellerDeleteView.as_view(), name="seller_delete"),
+    path("sales/", sale_list, name="sale_list"),
+    path("sales/create/", sale_create, name="sale_create"),
+    path("sales/<int:pk>/update/", sale_update, name="sale_update"),
+    path("sales/<int:pk>/delete/", SaleDeleteView.as_view(), name="sale_delete"),
+    path("products/", product_list, name="product_list"),
+    path("products/create/", ProductCreateView.as_view(), name="product_create"),
+    path("products/<int:pk>/update/", ProductUpdateView.as_view(), name="product_update"),
+    path("products/<int:pk>/delete/", ProductDeleteView.as_view(), name="product_delete"),
 ]

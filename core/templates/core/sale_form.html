@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4">{% if sale %}Editar Venda{% else %}Criar Venda{% endif %}</h1>
+        <p class="lead">{% if sale %}Atualize os detalhes da venda.{% else %}Preencha os detalhes para criar uma nova venda.{% endif %}</p>
+    </div>
+</section>
+
+<section class="product-section">
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group mb-3">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <hr>
+            <h2>Itens da Venda</h2>
+            {{ formset.management_form }}
+            {% if formset.non_form_errors %}
+                <div class="alert alert-danger">
+                    {{ formset.non_form_errors }}
+                </div>
+            {% endif %}
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Lote</th>
+                        <th>Excluir</th>
+                    </tr>
+                </thead>
+                <tbody id="item-forms">
+                    {% for form in formset.forms %}
+                        <tr class="item-form">
+                            {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+                            <td>
+                                {{ form.product }}
+                                {% for error in form.product.errors %}<div class="alert alert-danger mt-1">{{ error }}</div>{% endfor %}
+                            </td>
+                            <td>
+                                {{ form.quantity }}
+                                {% for error in form.quantity.errors %}<div class="alert alert-danger mt-1">{{ error }}</div>{% endfor %}
+                            </td>
+                            <td>
+                                {{ form.lote }}
+                                {% for error in form.lote.errors %}<div class="alert alert-danger mt-1">{{ error }}</div>{% endfor %}
+                            </td>
+                            <td>
+                                {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="button" id="add-item" class="btn btn-info">Adicionar Produto</button>
+            <br><br>
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            <a href="{% url 'sale_list' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</section>
+
+<script type="text/template" id="item-form-template">
+    <tr class="item-form" id="{{ formset.prefix }}-__prefix__">
+        {% for field in formset.empty_form.hidden_fields %}{{ field }}{% endfor %}
+        <td>
+            {{ formset.empty_form.product }}
+        </td>
+        <td>
+            {{ formset.empty_form.quantity }}
+        </td>
+        <td>
+            {{ formset.empty_form.lote }}
+        </td>
+        <td>
+            {{ formset.empty_form.DELETE }}
+        </td>
+    </tr>
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addItemButton = document.getElementById('add-item');
+    const formsetContainer = document.getElementById('item-forms');
+    const formTemplate = document.getElementById('item-form-template').innerHTML;
+    const totalFormsInput = document.querySelector('#id_items-TOTAL_FORMS');
+    const formsetPrefix = '{{ formset.prefix }}';
+
+    addItemButton.addEventListener('click', function() {
+        let formNum = parseInt(totalFormsInput.value);
+        let newForm = formTemplate.replace(/__prefix__/g, formNum);
+        formsetContainer.insertAdjacentHTML('beforeend', newForm);
+        totalFormsInput.value = formNum + 1;
+    });
+});
+</script>
+{% endblock %}
