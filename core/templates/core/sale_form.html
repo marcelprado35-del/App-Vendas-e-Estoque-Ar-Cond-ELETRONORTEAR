@@ -48,7 +48,6 @@
                         <th>Produto</th>
                         <th>Quantidade</th>
                         <th>Lote</th>
-                        <th>Frete</th>
                         <th>Excluir</th>
                     </tr>
                 </thead>
@@ -67,10 +66,6 @@
                             <td>
                                 {{ form.lote }}
                                 {% for error in form.lote.errors %}<div class="alert alert-danger mt-1">{{ error }}</div>{% endfor %}
-                            </td>
-                            <td>
-                                {{ form.Frete }}
-                                {% for error in form.Frete.errors %}<div class="alert alert-danger mt-1">{{ error }}</div>{% endfor %}
                             </td>
                             <td>
                                 {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
@@ -98,9 +93,6 @@
         </td>
         <td>
             {{ formset.empty_form.lote }}
-        </td>
-        <td>
-            {{ formset.empty_form.Frete }}
         </td>
         <td>
             {{ formset.empty_form.DELETE }}
